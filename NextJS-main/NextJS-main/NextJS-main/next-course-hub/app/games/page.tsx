@@ -10,12 +10,13 @@ type Game = {
   status: string;
 };
 
+// รายการเกมเริ่มต้นครบทั้ง 5 เกม
 const initialGames: Game[] = [
   { id: 1, name: "ROV", platform: "Mobile", hours: 200, status: "กำลังเล่น" },
-  { id: 2, name: "Free Fire", platform: "Mobile", hours: 150, status: "กำลังเล่น" },
-  { id: 3, name: "Minecraft", platform: "PC / Mobile", hours: 300, status: "กำลังเล่น" },
-  { id: 4, name: "Genshin Impact", platform: "PC / Mobile", hours: 250, status: "กำลังเล่น" },
-  { id: 5, name: "Valorant", platform: "PC", hours: 180, status: "เล่นจบแล้ว" },
+  { id: 2, name: "PUBG Mobile", platform: "Mobile", hours: 150, status: "กำลังเล่น" },
+  { id: 3, name: "Block Blast!", platform: "Mobile", hours: 30, status: "เล่นจบแล้ว" },
+  { id: 4, name: "Minecraft", platform: "PC / Mobile", hours: 300, status: "กำลังเล่น" },
+  { id: 5, name: "Genshin Impact", platform: "PC / Mobile", hours: 250, status: "กำลังเล่น" },
 ];
 
 export default function GamesPage() {
@@ -45,7 +46,7 @@ export default function GamesPage() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!name || !platform || !hours) {
-      alert("กรุณากรอกข้อมูลให้ครบ");
+      alert("กรุณากรอกข้อมูลให้ครบถ้วน");
       return;
     }
 
@@ -72,7 +73,7 @@ export default function GamesPage() {
   };
 
   const handleDelete = (id: number) => {
-    if (confirm("ต้องการลบเกมนี้หรือไม่?")) {
+    if (confirm("ต้องการลบรายการเกมนี้ใช่หรือไม่?")) {
       setGames(games.filter((game) => game.id !== id));
     }
   };
@@ -95,39 +96,45 @@ export default function GamesPage() {
   };
 
   return (
-    <main className="games-page">
-      <div className="game-container">
-        <header className="header-section">
-          <div className="game-icon">🎮</div>
-          <h2>Game Backlog Tracker</h2>
+    <div className="cyber-wrapper">
+      <main className="cyber-container">
+        {/* Header */}
+        <header className="cyber-header">
+          <div className="neon-tag">GAMING LOG</div>
+          <h1 className="cyber-title">MY GAME VAULT</h1>
+          <p className="cyber-subtitle">ระบบบันทึกและติดตามสถานะเกมส่วนตัว</p>
         </header>
 
-        <section className="game-form">
-          <h1>{editingId !== null ? "✏️ แก้ไขข้อมูลเกม" : "➕ เพิ่มเกมใหม่"}</h1>
-          <form onSubmit={handleSubmit}>
+        {/* Form Input Section */}
+        <section className="cyber-card form-section">
+          <h2 className="card-title">
+            {editingId !== null ? "⚡ EDIT GAME DETAILS" : "⚡ ADD NEW GAME"}
+          </h2>
+
+          <form onSubmit={handleSubmit} className="cyber-form">
             <div className="input-group">
-              <label>ชื่อเกม</label>
+              <label>ชื่อเกม (Game Title)</label>
               <input
                 type="text"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                placeholder="เช่น Cyberpunk 2077"
+                placeholder="ระบุชื่อเกม..."
               />
             </div>
 
             <div className="input-group">
-              <label>แพลตฟอร์ม</label>
+              <label>แพลตฟอร์ม (Platform)</label>
               <input
                 type="text"
                 value={platform}
                 onChange={(e) => setPlatform(e.target.value)}
-                placeholder="เช่น PC, PS5, Switch, Mobile"
+                placeholder="เช่น Mobile, PC, PS5, Switch"
               />
             </div>
 
-            <div className="form-row">
+            <div className="form-grid-2">
               <div className="input-group">
-                <label>ชั่วโมงที่คาดว่าจะเล่น</label>
+                <label>เวลาที่เล่น (ชั่วโมง)</label>
                 <input
                   type="number"
                   min="0"
@@ -138,7 +145,7 @@ export default function GamesPage() {
               </div>
 
               <div className="input-group">
-                <label>สถานะ</label>
+                <label>สถานะ (Status)</label>
                 <select value={status} onChange={(e) => setStatus(e.target.value)}>
                   <option value="ยังไม่เริ่ม">ยังไม่เริ่ม</option>
                   <option value="กำลังเล่น">กำลังเล่น</option>
@@ -147,12 +154,12 @@ export default function GamesPage() {
               </div>
             </div>
 
-            <div className="form-buttons">
-              <button type="submit" className="save-button">
-                {editingId !== null ? "บันทึกการแก้ไข" : "เพิ่มลงคลัง"}
+            <div className="form-actions">
+              <button type="submit" className="cyber-btn primary">
+                {editingId !== null ? "บันทึกการแก้ไข" : "เพิ่มรายการเกม"}
               </button>
               {editingId !== null && (
-                <button type="button" className="cancel-button" onClick={clearForm}>
+                <button type="button" className="cyber-btn secondary" onClick={clearForm}>
                   ยกเลิก
                 </button>
               )}
@@ -160,343 +167,366 @@ export default function GamesPage() {
           </form>
         </section>
 
-        <section className="game-list">
-          <div className="list-header">
-            <h3>คลังเกมของคุณ ({games.length})</h3>
+        {/* Display Games List */}
+        <section className="games-display-section">
+          <div className="display-header">
+            <h2>คลังเกมทั้งหมด</h2>
+            <span className="badge-count">{games.length} ITEMS</span>
           </div>
 
           {games.length === 0 ? (
-            <div className="empty-state">ยังไม่มีรายการเกมในคลังของคุณ</div>
+            <div className="empty-state">ไม่มีรายการเกมในระบบขณะนี้</div>
           ) : (
-            games.map((game) => (
-              <div className="game-card" key={game.id}>
-                <div className="game-info">
-                  <h2>{game.name}</h2>
-                  <div className="game-details">
-                    <span className="platform-tag">{game.platform}</span>
-                    <span className="bullet">•</span>
-                    <span className="hours-text">⏱️ {game.hours} ชม.</span>
-                    <span className="bullet">•</span>
-                    <span
-                      className={`status-badge ${
-                        game.status === "กำลังเล่น"
-                          ? "status-playing"
-                          : game.status === "เล่นจบแล้ว"
-                          ? "status-finished"
-                          : "status-not-started"
-                      }`}
-                    >
-                      {game.status}
-                    </span>
+            <div className="games-grid">
+              {games.map((game) => (
+                <div key={game.id} className="game-card">
+                  <div className="game-card-content">
+                    <div className="card-top">
+                      <span className="platform-tag">{game.platform}</span>
+                      <span
+                        className={`status-chip ${
+                          game.status === "กำลังเล่น"
+                            ? "status-playing"
+                            : game.status === "เล่นจบแล้ว"
+                            ? "status-finished"
+                            : "status-pending"
+                        }`}
+                      >
+                        {game.status}
+                      </span>
+                    </div>
+
+                    <h3 className="game-title">{game.name}</h3>
+
+                    <div className="game-hours">
+                      <span className="icon">⏱️</span>
+                      <span className="val">{game.hours} ชั่วโมง</span>
+                    </div>
+                  </div>
+
+                  <div className="card-actions">
+                    <button className="btn-edit" onClick={() => handleEdit(game)}>
+                      แก้ไข
+                    </button>
+                    <button className="btn-delete" onClick={() => handleDelete(game.id)}>
+                      ลบ
+                    </button>
                   </div>
                 </div>
-
-                <div className="game-actions">
-                  <button className="edit-button" onClick={() => handleEdit(game)}>
-                    แก้ไข
-                  </button>
-                  <button className="delete-button" onClick={() => handleDelete(game.id)}>
-                    ลบ
-                  </button>
-                </div>
-              </div>
-            ))
+              ))}
+            </div>
           )}
         </section>
-      </div>
+      </main>
 
       <style jsx>{`
-        .games-page {
+        .cyber-wrapper {
           min-height: 100vh;
-          background: #0b0f19;
+          background-color: #0d0a1a;
           background-image: 
-            radial-gradient(at 0% 0%, rgba(139, 92, 246, 0.15) 0px, transparent 50%),
-            radial-gradient(at 100% 100%, rgba(236, 72, 153, 0.1) 0px, transparent 50%);
+            radial-gradient(circle at 10% 20%, rgba(147, 51, 234, 0.15) 0%, transparent 40%),
+            radial-gradient(circle at 90% 80%, rgba(244, 63, 94, 0.15) 0%, transparent 40%);
+          color: #f1f5f9;
+          font-family: 'Inter', system-ui, -apple-system, sans-serif;
           padding: 40px 20px 80px;
-          font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-          color: #f3f4f6;
         }
 
-        .game-container {
-          width: 100%;
-          max-width: 680px;
+        .cyber-container {
+          max-width: 860px;
           margin: 0 auto;
         }
 
-        .header-section {
-          display: flex;
-          align-items: center;
-          gap: 12px;
-          margin-bottom: 24px;
+        .cyber-header {
+          text-align: center;
+          margin-bottom: 36px;
         }
 
-        .game-icon {
+        .neon-tag {
+          display: inline-block;
+          font-size: 11px;
+          font-weight: 800;
+          letter-spacing: 2px;
+          color: #f43f5e;
+          background: rgba(244, 63, 94, 0.1);
+          border: 1px solid rgba(244, 63, 94, 0.3);
+          padding: 4px 12px;
+          border-radius: 4px;
+          margin-bottom: 12px;
+        }
+
+        .cyber-title {
           font-size: 32px;
-          background: rgba(255, 255, 255, 0.05);
-          border: 1px solid rgba(255, 255, 255, 0.1);
-          padding: 8px 12px;
-          border-radius: 12px;
-          backdrop-filter: blur(8px);
-        }
-
-        .header-section h2 {
-          font-size: 22px;
-          font-weight: 700;
-          margin: 0;
-          background: linear-gradient(135deg, #fff 0%, #a5b4fc 100%);
+          font-weight: 900;
+          letter-spacing: 1px;
+          margin: 0 0 8px;
+          background: linear-gradient(135deg, #ffffff 0%, #c084fc 50%, #f43f5e 100%);
           -webkit-background-clip: text;
           -webkit-text-fill-color: transparent;
         }
 
-        .game-form {
-          background: rgba(17, 24, 39, 0.7);
-          border: 1px solid rgba(255, 255, 255, 0.08);
-          backdrop-filter: blur(12px);
-          border-radius: 16px;
-          padding: 24px;
-          box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
-          margin-bottom: 32px;
+        .cyber-subtitle {
+          color: #94a3b8;
+          font-size: 14px;
+          margin: 0;
         }
 
-        .game-form h1 {
-          font-size: 18px;
-          font-weight: 600;
-          margin: 0 0 20px;
-          color: #e5e7eb;
+        .cyber-card {
+          background: rgba(23, 15, 38, 0.8);
+          border: 1px solid rgba(168, 85, 247, 0.25);
+          box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
+          backdrop-filter: blur(12px);
+          border-radius: 16px;
+          padding: 28px;
+          margin-bottom: 40px;
+        }
+
+        .card-title {
+          font-size: 16px;
+          font-weight: 800;
+          letter-spacing: 0.5px;
+          color: #e9d5ff;
+          margin: 0 0 24px;
+          border-bottom: 1px solid rgba(168, 85, 247, 0.15);
+          padding-bottom: 12px;
         }
 
         .input-group {
-          margin-bottom: 16px;
+          margin-bottom: 18px;
         }
 
-        .form-row {
-          display: grid;
-          grid-template-columns: 1fr 1fr;
-          gap: 16px;
-        }
-
-        .game-form label {
+        .input-group label {
           display: block;
-          font-size: 13px;
-          font-weight: 500;
+          font-size: 12px;
+          font-weight: 700;
+          color: #a855f7;
           margin-bottom: 6px;
-          color: #9ca3af;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
         }
 
-        .game-form input,
-        .game-form select {
+        .input-group input,
+        .input-group select {
           width: 100%;
           box-sizing: border-box;
-          background: rgba(31, 41, 55, 0.6);
-          border: 1px solid rgba(255, 255, 255, 0.1);
-          color: #f9fafb;
-          padding: 10px 14px;
+          background: #130a24;
+          border: 1px solid #3b1d54;
+          color: #f8fafc;
+          padding: 12px 16px;
           border-radius: 8px;
           font-size: 14px;
           outline: none;
           transition: all 0.2s ease;
         }
 
-        .game-form input:focus,
-        .game-form select:focus {
-          border-color: #8b5cf6;
-          box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.2);
-          background: rgba(31, 41, 55, 0.9);
+        .input-group input:focus,
+        .input-group select:focus {
+          border-color: #f43f5e;
+          box-shadow: 0 0 12px rgba(244, 63, 94, 0.3);
         }
 
-        .form-buttons {
+        .form-grid-2 {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 16px;
+        }
+
+        .form-actions {
           display: flex;
-          gap: 10px;
+          gap: 12px;
           margin-top: 24px;
         }
 
-        .save-button {
-          flex: 1;
-          background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%);
-          color: white;
+        .cyber-btn {
+          padding: 12px 24px;
+          border-radius: 8px;
+          font-weight: 700;
+          font-size: 14px;
           border: none;
-          padding: 11px 20px;
-          border-radius: 8px;
-          font-weight: 600;
-          font-size: 14px;
-          cursor: pointer;
-          transition: all 0.2s ease;
-          box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3);
-        }
-
-        .save-button:hover {
-          transform: translateY(-1px);
-          box-shadow: 0 6px 16px rgba(124, 58, 237, 0.4);
-        }
-
-        .cancel-button {
-          background: rgba(255, 255, 255, 0.05);
-          border: 1px solid rgba(255, 255, 255, 0.1);
-          color: #d1d5db;
-          padding: 11px 20px;
-          border-radius: 8px;
-          font-size: 14px;
           cursor: pointer;
           transition: all 0.2s ease;
         }
 
-        .cancel-button:hover {
-          background: rgba(255, 255, 255, 0.1);
+        .cyber-btn.primary {
+          flex: 1;
+          background: linear-gradient(135deg, #a855f7 0%, #ec4899 100%);
+          color: #ffffff;
+          box-shadow: 0 4px 15px rgba(168, 85, 247, 0.4);
         }
 
-        .list-header {
-          margin-bottom: 16px;
+        .cyber-btn.primary:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 6px 20px rgba(168, 85, 247, 0.6);
         }
 
-        .list-header h3 {
-          font-size: 16px;
-          font-weight: 600;
-          color: #9ca3af;
-          margin: 0;
+        .cyber-btn.secondary {
+          background: #2a1b3d;
+          color: #cbd5e1;
+          border: 1px solid #4a2b6b;
         }
 
-        .game-list {
-          display: flex;
-          flex-direction: column;
-          gap: 12px;
+        .cyber-btn.secondary:hover {
+          background: #3b2554;
         }
 
-        .game-card {
-          background: rgba(17, 24, 39, 0.5);
-          border: 1px solid rgba(255, 255, 255, 0.05);
-          border-radius: 12px;
-          padding: 18px 20px;
+        .display-header {
           display: flex;
           align-items: center;
           justify-content: space-between;
-          gap: 16px;
-          transition: all 0.2s ease;
+          margin-bottom: 20px;
+        }
+
+        .display-header h2 {
+          font-size: 20px;
+          font-weight: 800;
+          margin: 0;
+          color: #f1f5f9;
+        }
+
+        .badge-count {
+          background: #2a1b3d;
+          color: #c084fc;
+          border: 1px solid #4a2b6b;
+          font-size: 11px;
+          font-weight: 800;
+          padding: 4px 10px;
+          border-radius: 20px;
+        }
+
+        .games-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+          gap: 20px;
+        }
+
+        .game-card {
+          background: rgba(23, 15, 38, 0.6);
+          border: 1px solid rgba(168, 85, 247, 0.2);
+          border-radius: 12px;
+          padding: 20px;
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+          transition: all 0.25s ease;
         }
 
         .game-card:hover {
-          border-color: rgba(139, 92, 246, 0.3);
-          background: rgba(17, 24, 39, 0.8);
-          transform: translateY(-2px);
+          transform: translateY(-4px);
+          border-color: #f43f5e;
+          box-shadow: 0 8px 25px rgba(244, 63, 94, 0.25);
+          background: rgba(23, 15, 38, 0.9);
         }
 
-        .game-info h2 {
-          color: #f3f4f6;
-          font-size: 16px;
-          font-weight: 600;
-          margin: 0 0 8px;
-        }
-
-        .game-details {
+        .card-top {
           display: flex;
           align-items: center;
-          gap: 8px;
-          font-size: 13px;
-          color: #9ca3af;
-          flex-wrap: wrap;
+          justify-content: space-between;
+          margin-bottom: 12px;
         }
 
         .platform-tag {
-          background: rgba(255, 255, 255, 0.06);
-          padding: 2px 8px;
+          font-size: 11px;
+          font-weight: 700;
+          color: #38bdf8;
+          background: rgba(56, 189, 248, 0.1);
+          padding: 3px 8px;
           border-radius: 4px;
-          color: #d1d5db;
         }
 
-        .bullet {
-          color: #4b5563;
-        }
-
-        .status-badge {
-          font-weight: 500;
-          padding: 2px 8px;
-          border-radius: 12px;
-          font-size: 12px;
+        .status-chip {
+          font-size: 11px;
+          font-weight: 700;
+          padding: 3px 8px;
+          border-radius: 4px;
         }
 
         .status-playing {
-          background: rgba(245, 158, 11, 0.1);
-          color: #fbbf24;
-          border: 1px solid rgba(245, 158, 11, 0.2);
+          background: rgba(250, 204, 21, 0.15);
+          color: #facc15;
         }
 
         .status-finished {
-          background: rgba(16, 185, 129, 0.1);
-          color: #34d399;
-          border: 1px solid rgba(16, 185, 129, 0.2);
+          background: rgba(74, 222, 128, 0.15);
+          color: #4ade80;
         }
 
-        .status-not-started {
-          background: rgba(156, 163, 175, 0.1);
-          color: #9ca3af;
-          border: 1px solid rgba(156, 163, 175, 0.2);
+        .status-pending {
+          background: rgba(148, 163, 184, 0.15);
+          color: #cbd5e1;
         }
 
-        .game-actions {
+        .game-title {
+          font-size: 18px;
+          font-weight: 800;
+          color: #ffffff;
+          margin: 0 0 12px;
+        }
+
+        .game-hours {
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          font-size: 13px;
+          color: #94a3b8;
+          margin-bottom: 20px;
+        }
+
+        .card-actions {
           display: flex;
           gap: 8px;
-          flex-shrink: 0;
+          border-top: 1px solid rgba(255, 255, 255, 0.05);
+          padding-top: 14px;
         }
 
-        .edit-button,
-        .delete-button {
-          border: none;
+        .btn-edit,
+        .btn-delete {
+          flex: 1;
+          padding: 8px;
           border-radius: 6px;
-          padding: 7px 12px;
+          font-size: 12px;
+          font-weight: 700;
+          border: none;
           cursor: pointer;
-          font-size: 13px;
-          font-weight: 500;
           transition: all 0.2s ease;
         }
 
-        .edit-button {
-          background: rgba(245, 158, 11, 0.1);
-          color: #fbbf24;
+        .btn-edit {
+          background: rgba(168, 85, 247, 0.15);
+          color: #c084fc;
         }
 
-        .edit-button:hover {
-          background: rgba(245, 158, 11, 0.2);
+        .btn-edit:hover {
+          background: rgba(168, 85, 247, 0.3);
         }
 
-        .delete-button {
-          background: rgba(239, 68, 68, 0.1);
-          color: #f87171;
+        .btn-delete {
+          background: rgba(244, 63, 94, 0.15);
+          color: #fb7185;
         }
 
-        .delete-button:hover {
-          background: rgba(239, 68, 68, 0.2);
+        .btn-delete:hover {
+          background: rgba(244, 63, 94, 0.3);
         }
 
         .empty-state {
           text-align: center;
           padding: 40px;
-          color: #6b7280;
-          background: rgba(17, 24, 39, 0.3);
+          background: rgba(23, 15, 38, 0.4);
+          border: 1px dashed rgba(168, 85, 247, 0.2);
           border-radius: 12px;
-          border: 1px dashed rgba(255, 255, 255, 0.08);
+          color: #64748b;
         }
 
         @media (max-width: 600px) {
-          .form-row {
+          .form-grid-2 {
             grid-template-columns: 1fr;
             gap: 0;
           }
 
-          .game-card {
-            align-items: flex-start;
-            flex-direction: column;
-          }
-
-          .game-actions {
-            width: 100%;
-            margin-top: 8px;
-          }
-
-          .edit-button,
-          .delete-button {
-            flex: 1;
+          .games-grid {
+            grid-template-columns: 1fr;
           }
         }
       `}</style>
-    </main>
+    </div>
   );
 }
