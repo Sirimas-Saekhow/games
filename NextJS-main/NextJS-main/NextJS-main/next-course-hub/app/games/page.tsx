@@ -31,7 +31,7 @@ export default function GamesPage() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name || !platform || !hours) return alert("กรอกข้อมูลให้ครบ");
+    if (!name || !platform || !hours) return alert("กรอกข้อมูลให้ครบถ้วน");
 
     if (editingId !== null) {
       setGames(games.map((g) => (g.id === editingId ? { ...g, name, platform, hours: Number(hours), status } : g)));
@@ -47,57 +47,101 @@ export default function GamesPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0d0a1a] text-purple-100 p-6 md:p-12 font-sans">
-      <div className="max-w-3xl mx-auto space-y-8">
-        <header className="text-center space-y-2">
-          <span className="bg-rose-500/10 text-rose-400 text-xs font-bold tracking-widest px-3 py-1 rounded border border-rose-500/30">GAMING LOG</span>
-          <h1 className="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-white via-purple-300 to-rose-400">MY GAME VAULT</h1>
+    <div className="page-bg">
+      <div className="container">
+        <header className="header">
+          <span className="badge">GAMING LOG</span>
+          <h1>MY GAME VAULT</h1>
         </header>
 
         {/* ฟอร์มเพิ่ม/แก้ไข */}
-        <form onSubmit={handleSubmit} className="bg-[#170f26]/80 border border-purple-500/30 p-6 rounded-2xl space-y-4 backdrop-blur shadow-xl">
-          <h2 className="text-sm font-bold text-purple-300 tracking-wider">⚡ {editingId ? "EDIT GAME DETAILS" : "ADD NEW GAME"}</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <input className="bg-[#130a24] border border-purple-900/60 p-2.5 rounded-lg text-sm text-white focus:outline-none focus:border-rose-500 transition" placeholder="ชื่อเกม" value={name} onChange={(e) => setName(e.target.value)} />
-            <input className="bg-[#130a24] border border-purple-900/60 p-2.5 rounded-lg text-sm text-white focus:outline-none focus:border-rose-500 transition" placeholder="แพลตฟอร์ม (เช่น Mobile, PC)" value={platform} onChange={(e) => setPlatform(e.target.value)} />
-            <input className="bg-[#130a24] border border-purple-900/60 p-2.5 rounded-lg text-sm text-white focus:outline-none focus:border-rose-500 transition" type="number" placeholder="ชั่วโมงที่เล่น" value={hours} onChange={(e) => setHours(e.target.value)} />
-            <select className="bg-[#130a24] border border-purple-900/60 p-2.5 rounded-lg text-sm text-white focus:outline-none focus:border-rose-500 transition" value={status} onChange={(e) => setStatus(e.target.value)}>
+        <form onSubmit={handleSubmit} className="form-card">
+          <h2>⚡ {editingId ? "EDIT GAME DETAILS" : "ADD NEW GAME"}</h2>
+          <div className="form-grid">
+            <input placeholder="ชื่อเกม" value={name} onChange={(e) => setName(e.target.value)} />
+            <input placeholder="แพลตฟอร์ม (เช่น Mobile, PC)" value={platform} onChange={(e) => setPlatform(e.target.value)} />
+            <input type="number" placeholder="ชั่วโมงที่เล่น" value={hours} onChange={(e) => setHours(e.target.value)} />
+            <select value={status} onChange={(e) => setStatus(e.target.value)}>
               <option value="ยังไม่เริ่ม">ยังไม่เริ่ม</option>
               <option value="กำลังเล่น">กำลังเล่น</option>
               <option value="เล่นจบแล้ว">เล่นจบแล้ว</option>
             </select>
           </div>
-          <button type="submit" className="w-full bg-gradient-to-r from-purple-600 to-rose-500 hover:from-purple-500 hover:to-rose-400 text-white font-bold py-2.5 rounded-lg shadow-lg shadow-purple-500/20 transition">
+          <button type="submit" className="submit-btn">
             {editingId ? "บันทึกการแก้ไข" : "เพิ่มรายการเกม"}
           </button>
         </form>
 
-        {/* รายการเกมทั้ง 5 รายการ */}
-        <div className="space-y-4">
-          <div className="flex justify-between items-center">
-            <h2 className="text-xl font-bold text-white">คลังเกมทั้งหมด</h2>
-            <span className="text-xs font-extrabold bg-[#2a1b3d] text-purple-300 border border-purple-800 px-3 py-1 rounded-full">{games.length} ITEMS</span>
+        {/* รายการเกม */}
+        <div className="list-section">
+          <div className="list-header">
+            <h2>คลังเกมทั้งหมด</h2>
+            <span className="count-badge">{games.length} ITEMS</span>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="cards-grid">
             {games.map((g) => (
-              <div key={g.id} className="bg-[#170f26]/60 border border-purple-500/20 p-4 rounded-xl flex flex-col justify-between space-y-3 hover:border-rose-500/60 hover:-translate-y-1 transition duration-200">
+              <div key={g.id} className="game-card">
                 <div>
-                  <div className="flex justify-between items-start mb-2">
-                    <span className="text-xs font-bold text-sky-400 bg-sky-500/10 px-2 py-0.5 rounded">{g.platform}</span>
-                    <span className={`text-xs font-bold px-2 py-0.5 rounded ${g.status === "กำลังเล่น" ? "bg-amber-500/10 text-amber-300" : g.status === "เล่นจบแล้ว" ? "bg-emerald-500/10 text-emerald-300" : "bg-slate-500/10 text-slate-300"}`}>{g.status}</span>
+                  <div className="card-top">
+                    <span className="platform">{g.platform}</span>
+                    <span className={`status ${g.status === "กำลังเล่น" ? "playing" : g.status === "เล่นจบแล้ว" ? "done" : "pending"}`}>
+                      {g.status}
+                    </span>
                   </div>
-                  <h3 className="font-extrabold text-lg text-white">{g.name}</h3>
-                  <p className="text-xs text-purple-300/70 mt-1">⏱️ {g.hours} ชั่วโมง</p>
+                  <h3>{g.name}</h3>
+                  <p className="hours">⏱️ {g.hours} ชั่วโมง</p>
                 </div>
-                <div className="flex gap-2 pt-3 border-t border-purple-900/40">
-                  <button onClick={() => handleEdit(g)} className="flex-1 text-xs bg-purple-500/15 hover:bg-purple-500/30 text-purple-300 py-1.5 rounded font-bold transition">แก้ไข</button>
-                  <button onClick={() => setGames(games.filter((item) => item.id !== g.id))} className="flex-1 text-xs bg-rose-500/15 hover:bg-rose-500/30 text-rose-300 py-1.5 rounded font-bold transition">ลบ</button>
+                <div className="card-actions">
+                  <button onClick={() => handleEdit(g)} className="btn-edit">แก้ไข</button>
+                  <button onClick={() => setGames(games.filter((item) => item.id !== g.id))} className="btn-delete">ลบ</button>
                 </div>
               </div>
             ))}
           </div>
         </div>
       </div>
+
+      <style jsx>{`
+        .page-bg { min-height: 100vh; background: #0d0a1a; color: #f3e8ff; padding: 40px 20px; font-family: sans-serif; }
+        .container { max-width: 760px; margin: 0 auto; display: flex; flex-direction: column; gap: 32px; }
+        .header { text-align: center; }
+        .badge { background: rgba(244, 63, 94, 0.15); color: #fb7185; border: 1px solid rgba(244, 63, 94, 0.3); font-size: 11px; font-weight: 800; padding: 4px 10px; border-radius: 4px; letter-spacing: 1px; }
+        .header h1 { font-size: 32px; font-weight: 900; margin: 8px 0 0; background: linear-gradient(135deg, #fff 0%, #c084fc 50%, #f43f5e 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        
+        .form-card { background: rgba(23, 15, 38, 0.8); border: 1px solid rgba(168, 85, 247, 0.3); border-radius: 16px; padding: 24px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
+        .form-card h2 { font-size: 13px; color: #c084fc; font-weight: 800; letter-spacing: 1px; margin: 0 0 16px; }
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
+        @media (max-width: 600px) { .form-grid { grid-template-columns: 1fr; } }
+        
+        input, select { width: 100%; box-sizing: border-box; background: #130a24; border: 1px solid #3b1d54; color: #fff; padding: 10px 14px; border-radius: 8px; font-size: 14px; outline: none; }
+        input:focus, select:focus { border-color: #f43f5e; }
+        
+        .submit-btn { width: 100%; background: linear-gradient(135deg, #a855f7 0%, #ec4899 100%); color: #fff; font-weight: 800; border: none; padding: 12px; border-radius: 8px; cursor: pointer; font-size: 14px; }
+        .submit-btn:hover { opacity: 0.9; }
+
+        .list-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+        .list-header h2 { font-size: 20px; font-weight: 800; margin: 0; }
+        .count-badge { background: #2a1b3d; color: #c084fc; border: 1px solid #4a2b6b; font-size: 11px; font-weight: 800; padding: 4px 10px; border-radius: 20px; }
+
+        .cards-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
+        .game-card { background: rgba(23, 15, 38, 0.6); border: 1px solid rgba(168, 85, 247, 0.2); border-radius: 12px; padding: 16px; display: flex; flex-direction: column; justify-content: space-between; gap: 16px; }
+        .game-card:hover { border-color: #f43f5e; transform: translateY(-2px); transition: all 0.2s; }
+        
+        .card-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+        .platform { font-size: 11px; font-weight: 700; color: #38bdf8; background: rgba(56, 189, 248, 0.1); padding: 2px 6px; border-radius: 4px; }
+        .status { font-size: 11px; font-weight: 700; padding: 2px 6px; border-radius: 4px; }
+        .status.playing { background: rgba(250, 204, 21, 0.15); color: #facc15; }
+        .status.done { background: rgba(74, 222, 128, 0.15); color: #4ade80; }
+        .status.pending { background: rgba(148, 163, 184, 0.15); color: #cbd5e1; }
+
+        .game-card h3 { margin: 0 0 4px; font-size: 18px; color: #fff; }
+        .hours { margin: 0; font-size: 12px; color: #a855f7; }
+
+        .card-actions { display: flex; gap: 8px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 12px; }
+        .btn-edit, .btn-delete { flex: 1; padding: 6px; border-radius: 6px; border: none; font-size: 12px; font-weight: 700; cursor: pointer; }
+        .btn-edit { background: rgba(168, 85, 247, 0.15); color: #c084fc; }
+        .btn-delete { background: rgba(244, 63, 94, 0.15); color: #fb7185; }
+      `}</style>
     </div>
   );
 }
